@@ -1,0 +1,96 @@
+<div class="containter">
+  <div class="row">
+    <div class="col-6">
+      <form class="form" [formGroup]="form">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="">Type</label>
+              <select class="form-control"  formControlName="type">
+                <option value="line">Line</option>
+                <option value="area">Area</option>
+                <option value="bar">Bar</option>
+                <option value="radar">Radar</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="">Title</label>
+              <input class="form-control" type="text" formControlName="title">
+            </div>
+
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="">Height</label>
+              <input  class="form-control"  type="number" formControlName="height">
+            </div>
+
+          </div>
+        </div>
+
+        <h3>Values <button class="btn btn-primary ml-4" (click)="addSeries()">Add series</button>
+          <button class="btn btn-primary ml-4" (click)="addValue()">Add value</button></h3>
+
+
+        <div>
+          <div style="width: 80%; display: inline-block;" formArrayName="series">
+            <h4>Data</h4>
+
+            <div *ngFor="let series of form.get('series').controls; let i = index" style="width: 20%; display: inline-block">
+              <div [formGroupName]="i">
+                Name: <input type="text" class="form-control" formControlName="name"><br>
+
+
+                <div formArrayName="data">
+                  <div *ngFor="let alias of form.get('series').controls[i].get('data').controls; let y=index">
+                    <label>
+                      Value: <input class="form-control" type="number" [formControlName]="y">
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div formArrayName="xaxis" style="width: 20%; display: inline-block">
+            <h4>XAxis</h4>
+            <div *ngFor="let alias of form.get('xaxis').controls; let i=index">
+              <label>
+                Value:
+                <input type="text" class="form-control" [formControlName]="i">
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-6">
+
+    <apx-chart #chart [series]="form.value.series | series: form.value.type"
+    [xaxis]="{ categories: form.value.xaxis }"
+    [chart]="{
+       height: form.value.height,
+       type: form.value.type,
+       zoom: {
+         enabled: false
+       },
+       shadow: {
+             enabled: true,
+             color: '#000',
+             top: 18,
+             left: 7,
+             blur: 10,
+             opacity: 1
+         }}"
+    [title]="{ text: form.value.title }" [autoUpdateSeries]="false"></apx-chart>
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
